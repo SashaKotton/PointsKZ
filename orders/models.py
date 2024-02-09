@@ -24,13 +24,17 @@ class Order(models.Model):
     STATUS_CHOICES = (
         ('processing','Обрабатывается'),
         ('at work', 'В работе'),
-        ('On the way', 'В пути'),
-        ('Completed', 'Выполнен'),
+        ('on the way', 'В пути'),
+        ('canceled', 'Отменен'),
+        ('completed', 'Выполнен'),
     )
     created_at = models.DateTimeField(verbose_name='Создано', default=timezone.now)
     status = models.CharField(max_length=255, choices = STATUS_CHOICES, verbose_name='Статус')
     deliverer = models.ForeignKey(Deliverer, blank=True, null=True, on_delete=models.CASCADE, verbose_name='Доставщик')
     payment = models.ForeignKey(Payment, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Вид платежа')
+    comment = models.TextField(default='',verbose_name='Комментарий')
+    total_price = models.IntegerField(default=0, verbose_name='Итоговая сумма')
+    payment_status = models.BooleanField(default= False, verbose_name='Статус оплаты')
 
     class Meta:
         verbose_name ='Заказ'
@@ -41,6 +45,8 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     product = models.ForeignKey(Product, null=True, blank=True, on_delete = models.CASCADE, verbose_name='Продукт')
+    quantity = models.IntegerField(default = 0, verbose_name='Количество')
+    amount = models.IntegerField(default=0, verbose_name='Подитог')
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Заказ')
 
     class Meta:
