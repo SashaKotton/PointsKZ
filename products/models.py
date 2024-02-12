@@ -1,5 +1,5 @@
 from django.db import models
-
+from tinymce.models import HTMLField
 
 # Create your models here.
 
@@ -20,11 +20,11 @@ class Product(models.Model):
     )
     category = models.ForeignKey(Category, null=True, blank=True, verbose_name='Категория', on_delete=models.CASCADE)
     title = models.CharField(max_length=255, verbose_name='Наименование')
-    description = models.TextField(verbose_name='Описание')
-    images = models.ImageField(verbose_name='Изображение')
+    description = HTMLField(verbose_name='Описание')
+    images = models.ImageField(verbose_name='Изображение', null=True, blank=True)
     price = models.IntegerField(default = 0, verbose_name='Цена')
     dish_weigth = models.IntegerField(default = 0, verbose_name='Выход НЕТТО')
-    structure = models.TextField(verbose_name='Состав')
+    structure = HTMLField(verbose_name='Состав')
     availability = models.CharField(verbose_name='Доступность', choices=AVAILABILITY_CHOICES, max_length=255, default='Available')
 
     class Meta:

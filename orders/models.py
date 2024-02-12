@@ -3,6 +3,7 @@ from django.utils import timezone
 from deliverers.models import Deliverer
 from products.models import Product
 
+
 class Payment(models.Model):
     PAYMENT_CHOICES = (
         ('card','Карточка'),
