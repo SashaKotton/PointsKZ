@@ -4,10 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <!-- {% load django_bootstrap5 %}
-    {% bootstrap_css %}
-    {% bootstrap_javascript %}
-    {% bootstrap_messages %} -->
     <style>
         body {
               margin: 0;
@@ -133,17 +129,16 @@
         <h1>PointsKZ</h1>
     </div>
     <div class="container">
-    {% for i in products %}
-    
+        
         <div class="nft">
             <div class='main'>
-                <a href="{% url 'product_detail' pk=i.pk%}"><img class='tokenImage' src="{{i.images.url}}" alt="Здесь будет Фотография" /></a>
-                <h2>{{i.title}}</h2>
-                <p class='description'>{{i.description}}</p>
-                <p class="description">{{i.structure}}</p>
+                <img class='tokenImage' src="{{product.images.url}}" alt="Здесь будет Фотография" />
+                <h2>{{product.title}}</h2>
+                <p class='description'>{{product.description}}</p>
+                <p class="description">{{product.structure}}</p>
                 <div class='tokenInfo'>
                     <div class="price">
-                        <p>{{i.price}}</p>
+                        <p>{{product.price}}</p>
                     </div>
                     <div class="duration">
                         
@@ -154,8 +149,6 @@
                 
             </div>
         </div>
-    
-    {% endfor %}
     </div>
     
        
