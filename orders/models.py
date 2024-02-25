@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from deliverers.models import Deliverer
 from products.models import Product
+from authorization.models import User
 
 
 class Payment(models.Model):
@@ -29,6 +30,7 @@ class Order(models.Model):
         ('canceled', 'Отменен'),
         ('completed', 'Выполнен'),
     )
+    user_id = models.ForeignKey(User, blank=True, null=True, on_delete = models.CASCADE, verbose_name='Айди пользователя')
     created_at = models.DateTimeField(verbose_name='Создано', default=timezone.now)
     status = models.CharField(max_length=255, choices = STATUS_CHOICES, verbose_name='Статус')
     deliverer = models.ForeignKey(Deliverer, blank=True, null=True, on_delete=models.CASCADE, verbose_name='Доставщик')
