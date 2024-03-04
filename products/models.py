@@ -18,7 +18,7 @@ class Product(models.Model):
         ('Not available', 'Нет в наличии'),
         ('Available', 'В наличии'),
     )
-    category = models.ForeignKey(Category, null=True, blank=True, verbose_name='Категория', on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, null=True, blank=True, verbose_name='Категория', on_delete=models.CASCADE, related_name = 'product_category')
     title = models.CharField(max_length=255, verbose_name='Наименование')
     description = HTMLField(verbose_name='Описание')
     images = models.ImageField(verbose_name='Изображение', null=True, blank=True)
