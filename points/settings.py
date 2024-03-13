@@ -145,6 +145,7 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS':(
         'rest_framework.filters.SearchFilter',
         'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.OrderingFilter',
     ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
@@ -153,10 +154,9 @@ REST_FRAMEWORK = {
     # 'DEFAULT_PERMISSION_CLASSES': [
     #     'rest_framework.permissions.IsAuthenticated',
     # ],
-    # 'DEFAULT_PAGINAITON_CLASS':'order.serializers.Pagination',
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    'PAGE_SIZE': 100,
+    'PAGE_SIZE': 20,
 }
 
 SPECTACULAR_SETTINGS = {

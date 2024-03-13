@@ -63,3 +63,12 @@ class TokenRefreshSerializer(TokenRefreshSerializer):
         data['role'] = user.ROLE_GROUP[user.role]
 
         return data
+    
+class UserProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'role', 'first_name', 'email']
+
+class UserNameEditSerializer(serializers.Serializer):
+    first_name = serializers.CharField()

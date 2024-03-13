@@ -9,8 +9,10 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
-from authorization.serializers import TokenRefreshSerializer, TokenObtainPairSerializer
+from rest_framework.viewsets import ViewSet
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework import generics
+from authorization.serializers import UserNameEditSerializer, UserProfileSerializer, TokenRefreshSerializer, TokenObtainPairSerializer
 
 # Create your views here.
 class TokenObtainPairView(TokenObtainPairView):
@@ -48,3 +50,24 @@ class UserRegisterView(APIView):
                                 role=role
                                 )
             return Response(status=status.HTTP_200_OK)
+        
+class UserProfileView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated,]
+    serializer_class = UserProfileSerializer
+    
+    def get(self, request):
+        user = request.user
+        serializer = UserProfileSerializer(user)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+    
+class UserProfileEditView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated,]
+    serializer_class = UserNameEditSerializer
+
+    def post(self, request):
+        first_name = request['first_name']
+        user = request.user
+        user.first_name = first_name
+        user.save()
+        return Response(status=status.HTTP_200_OK)
+        

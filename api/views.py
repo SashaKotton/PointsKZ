@@ -11,13 +11,21 @@ from rest_framework import status
 from rest_framework import mixins
 from rest_framework import generics
 from rest_framework import permissions
+from rest_framework.viewsets import GenericViewSet 
 from authorization.permissions import IsSuperAdmin
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
-class ProductList(generics.ListCreateAPIView):
+
+class ProductList(GenericViewSet, mixins.ListModelMixin):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [permissions.AllowAny]
-    
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['category','availability']
+    search_fields = ['title',]
+    ordering_fields = ['price',]
+    ordering = ['price',]
 
 class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()

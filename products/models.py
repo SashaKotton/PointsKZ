@@ -3,6 +3,7 @@ from tinymce.models import HTMLField
 
 # Create your models here.
 
+
 class Category(models.Model):
     title = models.CharField(max_length = 255, verbose_name = 'Категория')
 
@@ -33,3 +34,4 @@ class Product(models.Model):
 
     def __str__(self):
         return f'{self.pk} - {self.title}'
+    
