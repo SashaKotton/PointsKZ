@@ -35,7 +35,7 @@ class Order(models.Model):
     status = models.CharField(max_length=255, choices = STATUS_CHOICES, verbose_name='Статус')
     deliverer = models.ForeignKey(Deliverer, blank=True, null=True, on_delete=models.CASCADE, verbose_name='Доставщик')
     payment = models.ForeignKey(Payment, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Вид платежа')
-    comment = models.TextField(default='',verbose_name='Комментарий')
+    comment = models.TextField(default='',verbose_name='Комментарий', blank=True, null=True)
     total_price = models.IntegerField(default=0, verbose_name='Итоговая сумма')
     payment_status = models.BooleanField(default= False, verbose_name='Статус оплаты')
 

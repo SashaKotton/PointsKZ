@@ -24,7 +24,7 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('title',)
 
     def product_list_image(self, obj):
-        return mark_safe(f'<img src = "{obj.images.url}" width = 3% >')
+        return mark_safe(f'<img src = "{obj.images.url}" width = 10% >')
     
     product_list_image.short_description = 'Превью'
 

@@ -17,7 +17,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
 
-class ProductList(GenericViewSet, mixins.ListModelMixin):
+class ProductList(GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [permissions.AllowAny]
@@ -27,32 +27,29 @@ class ProductList(GenericViewSet, mixins.ListModelMixin):
     ordering_fields = ['price',]
     ordering = ['price',]
 
-class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    
-class OrderList(generics.ListCreateAPIView):
-    queryset = Order.objects.all()
-    serializer_class = OrderSerializer
-    permission_classes = [permissions.AllowAny]
-    
 
-class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Order.objects.all()
-    serializer_class = OrderSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-class DelivererList(generics.ListCreateAPIView):
+class DelivererList(GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin):
     queryset = Deliverer.objects.all()
     serializer_class = DelivererSerializer
     permission_classes = [permissions.AllowAny]
-    
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['delivery_company',]
+    search_fields = ['name','surname','phone']
+    ordering_fields = ['surname',]
+    ordering = ['surname',]
 
-class DelivererDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Deliverer.objects.all()
-    serializer_class = DelivererSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    
+class OrderList(GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = [permissions.AllowAny]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['payment', 'deliverer','payment_status','status','created_at','user_id',]
+    search_fields = ['user_id','deliverer','status', 'payment_status']
+    ordering_fields = ['created_at',]
+    ordering = ['created_at',]
+
+    
 
 # class ProductList(APIView):
 
