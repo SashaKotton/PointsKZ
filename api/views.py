@@ -5,6 +5,8 @@ from deliverers.models import Deliverer
 from products.serializers import ProductSerializer
 from orders.serializers import OrderSerializer
 from deliverers.serializers import DelivererSerializer
+from authorization.models import User
+from authorization.serializers import UserProfileSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -49,6 +51,15 @@ class OrderList(GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin
     ordering_fields = ['created_at',]
     ordering = ['created_at',]
 
+class UsersList(GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin):
+    queryset = User.objects.all()
+    serializer_class = UserProfileSerializer
+    permission_classes = [permissions.AllowAny]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['role', 'date_joined',]
+    search_fields = ['username', 'first_name', 'email',]
+    ordering_fields = ['date_joined',]
+    ordering = ['date_joined']
     
 
 # class ProductList(APIView):
