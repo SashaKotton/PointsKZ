@@ -1,10 +1,10 @@
 from django.shortcuts import render, get_object_or_404
-from products.models import Product
-from orders.models import Order
-from deliverers.models import Deliverer
-from products.serializers import ProductSerializer, ProductCreateSerializer
-from orders.serializers import OrderSerializer
-from deliverers.serializers import DelivererSerializer
+from products.models import Product, Category
+from orders.models import Order, Payment, OrderItem
+from deliverers.models import Deliverer, DeliveryCompany
+from products.serializers import ProductSerializer, ProductCreateSerializer, CategorySerializer
+from orders.serializers import OrderSerializer, OrderItemSerializer, PaymentSerializer
+from deliverers.serializers import DelivererSerializer, DelivererCompanySerializer
 from authorization.models import User
 from authorization.serializers import UserProfileSerializer
 from rest_framework.views import APIView
@@ -113,7 +113,90 @@ class UsersList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, 
             return [permission() for permission in self.permission_classes_by_action[self.action]]
         except KeyError:
             return []
+        
+class CategoryList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes_by_action = {
+        'list':[permissions.AllowAny],
+        'create':[permissions.IsAuthenticated & IsSuperAdmin],
+        'retrive':[permissions.AllowAny],
+        'update':[permissions.IsAuthenticated & IsSuperAdmin],
+    }
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['title',]
+    search_fields = ['title', ]
+    ordering_fields = ['title',]
+    ordering = ['title',]
+
+    def get_permissions(self):
+        try:
+            return [permission() for permission in self.permission_classes_by_action[self.action]]
+        except KeyError:
+            return []
+        
+class PaymentList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
+    queryset = Payment.objects.all()
+    serializer_class = PaymentSerializer
+    permission_classes_by_action = {
+        'list':[permissions.AllowAny],
+        'create':[permissions.IsAuthenticated & IsSuperAdmin],
+        'retrive':[permissions.AllowAny],
+        'update':[permissions.IsAuthenticated & IsSuperAdmin],
+    }
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['title','total_price',]
+    search_fields = ['title','total_price', ]
+    ordering_fields = ['title','total_price',]
+    ordering = ['title',]
+
+    def get_permissions(self):
+        try:
+            return [permission() for permission in self.permission_classes_by_action[self.action]]
+        except KeyError:
+            return []
     
+class OrderItemList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
+    queryset = OrderItem.objects.all()
+    serializer_class = OrderItemSerializer
+    permission_classes_by_action = {
+        'list':[permissions.AllowAny],
+        'create':[permissions.IsAuthenticated & IsSuperAdmin],
+        'retrive':[permissions.AllowAny],
+        'update':[permissions.IsAuthenticated & IsSuperAdmin],
+    }
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['order',]
+    search_fields = ['product','order', ]
+    ordering_fields = ['quantity','amount',]
+    ordering = ['quantity',]
+
+    def get_permissions(self):
+        try:
+            return [permission() for permission in self.permission_classes_by_action[self.action]]
+        except KeyError:
+            return []
+        
+class DeliveryCompanyList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
+    queryset = DeliveryCompany.objects.all()
+    serializer_class = DelivererCompanySerializer
+    permission_classes_by_action = {
+        'list':[permissions.AllowAny],
+        'create':[permissions.IsAuthenticated & IsSuperAdmin],
+        'retrive':[permissions.AllowAny],
+        'update':[permissions.IsAuthenticated & IsSuperAdmin],
+    }
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['title','phone']
+    search_fields = ['title','phone', ]
+    ordering_fields = ['title','phone',]
+    ordering = ['title',]
+
+    def get_permissions(self):
+        try:
+            return [permission() for permission in self.permission_classes_by_action[self.action]]
+        except KeyError:
+            return []
 
 # class ProductList(APIView):
 
