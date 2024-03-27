@@ -36,7 +36,7 @@ class UserRegisterView(APIView):
     def post(serl, request):
         username = request.data['username']
         password = request.data['password']
-        firs_name = request.data['first_name']
+        first_name = request.data['first_name']
         email = request.data['email']
         role = request.data['role']
         try:
@@ -45,7 +45,7 @@ class UserRegisterView(APIView):
         except:
             User.objects.create(username=username, 
                                 password=make_password(password), 
-                                firs_name=firs_name, 
+                                first_name=first_name, 
                                 email=email,
                                 role=role
                                 )

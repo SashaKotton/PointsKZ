@@ -18,14 +18,18 @@ from authorization.permissions import IsSuperAdmin
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from authorization.permissions import IsBasic, IsCourier, IsSuperAdmin
+import requests
 
-class ProductList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
+#Добавить стороннее API, Добавить удаление пользователя, добавить местоположение пользователя
+
+class ProductList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Product.objects.all()
     permission_classes_by_action = {
         'list':[permissions.AllowAny],
         'create':[permissions.IsAuthenticated & IsSuperAdmin],
         'retrive':[permissions.AllowAny],
         'update':[permissions.IsAuthenticated & IsSuperAdmin],
+        'destroy':[permissions.IsAuthenticated & IsSuperAdmin],
     }
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['category','availability']
@@ -48,9 +52,11 @@ class ProductList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin
             return ProductSerializer
         if self.action == 'update':
             return ProductSerializer
+        if self.action == 'destroy':
+            return ProductCreateSerializer
 
 
-class DelivererList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
+class DelivererList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Deliverer.objects.all()
     serializer_class = DelivererSerializer
     permission_classes_by_action = {
@@ -58,6 +64,7 @@ class DelivererList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMix
         'create':[permissions.IsAuthenticated & IsSuperAdmin],
         'retrive':[permissions.AllowAny],
         'update':[permissions.IsAuthenticated & IsSuperAdmin],
+        'destroy':[permissions.IsAuthenticated & IsSuperAdmin],
     }
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['delivery_company',]
@@ -72,7 +79,7 @@ class DelivererList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMix
             return []
 
     
-class OrderList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
+class OrderList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes_by_action = {
@@ -80,6 +87,7 @@ class OrderList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, 
         'create':[permissions.IsAuthenticated & IsSuperAdmin],
         'retrive':[permissions.AllowAny],
         'update':[permissions.IsAuthenticated & IsSuperAdmin],
+        'destroy':[permissions.IsAuthenticated & IsSuperAdmin],
     }
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['payment', 'deliverer','payment_status','status','created_at','user_id',]
@@ -93,7 +101,7 @@ class OrderList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, 
         except KeyError:
             return []
 
-class UsersList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
+class UsersList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = User.objects.all()
     serializer_class = UserProfileSerializer
     permission_classes_by_action = {
@@ -101,6 +109,7 @@ class UsersList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, 
         'create':[permissions.IsAuthenticated & IsSuperAdmin],
         'retrive':[permissions.AllowAny],
         'update':[permissions.IsAuthenticated & IsSuperAdmin],
+        'destroy':[permissions.IsAuthenticated & IsSuperAdmin],
     }
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['role', 'date_joined',]
@@ -114,7 +123,7 @@ class UsersList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, 
         except KeyError:
             return []
         
-class CategoryList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
+class CategoryList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes_by_action = {
@@ -122,6 +131,7 @@ class CategoryList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixi
         'create':[permissions.IsAuthenticated & IsSuperAdmin],
         'retrive':[permissions.AllowAny],
         'update':[permissions.IsAuthenticated & IsSuperAdmin],
+        'destroy':[permissions.IsAuthenticated & IsSuperAdmin],
     }
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['title',]
@@ -135,7 +145,7 @@ class CategoryList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixi
         except KeyError:
             return []
         
-class PaymentList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
+class PaymentList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
     permission_classes_by_action = {
@@ -143,6 +153,7 @@ class PaymentList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin
         'create':[permissions.IsAuthenticated & IsSuperAdmin],
         'retrive':[permissions.AllowAny],
         'update':[permissions.IsAuthenticated & IsSuperAdmin],
+        'destroy':[permissions.IsAuthenticated & IsSuperAdmin],
     }
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['title','total_price',]
@@ -156,7 +167,7 @@ class PaymentList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin
         except KeyError:
             return []
     
-class OrderItemList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
+class OrderItemList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = OrderItem.objects.all()
     serializer_class = OrderItemSerializer
     permission_classes_by_action = {
@@ -164,6 +175,7 @@ class OrderItemList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMix
         'create':[permissions.IsAuthenticated & IsSuperAdmin],
         'retrive':[permissions.AllowAny],
         'update':[permissions.IsAuthenticated & IsSuperAdmin],
+        'destroy':[permissions.IsAuthenticated & IsSuperAdmin],
     }
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['order',]
@@ -177,7 +189,7 @@ class OrderItemList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMix
         except KeyError:
             return []
         
-class DeliveryCompanyList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
+class DeliveryCompanyList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = DeliveryCompany.objects.all()
     serializer_class = DelivererCompanySerializer
     permission_classes_by_action = {
@@ -185,6 +197,7 @@ class DeliveryCompanyList(GenericViewSet, mixins.ListModelMixin, mixins.CreateMo
         'create':[permissions.IsAuthenticated & IsSuperAdmin],
         'retrive':[permissions.AllowAny],
         'update':[permissions.IsAuthenticated & IsSuperAdmin],
+        'destroy':[permissions.IsAuthenticated & IsSuperAdmin],
     }
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['title','phone']
@@ -197,6 +210,20 @@ class DeliveryCompanyList(GenericViewSet, mixins.ListModelMixin, mixins.CreateMo
             return [permission() for permission in self.permission_classes_by_action[self.action]]
         except KeyError:
             return []
+        
+class UserLocationView(GenericViewSet):
+    def get_location(self, request):
+        
+
+        url = "https://ipinfo.io/json"
+
+        payload = {}
+        files={}
+        headers = {}
+
+        response = requests.request("GET", url, headers=headers, data=payload, files=files)
+
+        return Response(data=response.json(), status=status.HTTP_200_OK)
 
 # class ProductList(APIView):
 

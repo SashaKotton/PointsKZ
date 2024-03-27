@@ -1,5 +1,5 @@
 from django.urls import path, include
-from api.views import ProductList, DelivererList, OrderList, UsersList, DeliveryCompanyList, PaymentList, OrderItemList, CategoryList
+from api.views import ProductList, DelivererList, OrderList, UsersList, DeliveryCompanyList, PaymentList, OrderItemList, CategoryList, UserLocationView
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -16,6 +16,6 @@ router.register('orderitem', OrderItemList, basename='orderitem')
 
 urlpatterns = [
     # path('', include(router.urls)),
-
+    path('location/', UserLocationView.as_view({'get':'get_location'})),
 ]
 urlpatterns += router.urls
