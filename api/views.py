@@ -3,7 +3,7 @@ from products.models import Product, Category
 from orders.models import Order, Payment, OrderItem
 from deliverers.models import Deliverer, DeliveryCompany
 from products.serializers import ProductSerializer, ProductCreateSerializer, CategorySerializer
-from orders.serializers import OrderSerializer, OrderItemSerializer, PaymentSerializer
+from orders.serializers import OrderSerializer, OrderItemSerializer, PaymentSerializer, OrderCreateSerializer
 from deliverers.serializers import DelivererSerializer, DelivererCompanySerializer
 from authorization.models import User
 from authorization.serializers import UserProfileSerializer
@@ -19,10 +19,13 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from authorization.permissions import IsBasic, IsCourier, IsSuperAdmin
 import requests
+from jokeapi import Jokes
+import asyncio
 
 #Добавить стороннее API, Добавить удаление пользователя, добавить местоположение пользователя
 
 class ProductList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
+
     queryset = Product.objects.all()
     permission_classes_by_action = {
         'list':[permissions.AllowAny],
@@ -100,6 +103,18 @@ class OrderList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, 
             return [permission() for permission in self.permission_classes_by_action[self.action]]
         except KeyError:
             return []
+        
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return OrderSerializer
+        if self.action == 'create':
+            return OrderCreateSerializer
+        if self.action == 'retrive':
+            return OrderSerializer
+        if self.action == 'update':
+            return OrderSerializer
+        if self.action == 'destroy':
+            return OrderCreateSerializer
 
 class UsersList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = User.objects.all()
@@ -224,6 +239,21 @@ class UserLocationView(GenericViewSet):
         response = requests.request("GET", url, headers=headers, data=payload, files=files)
 
         return Response(data=response.json(), status=status.HTTP_200_OK)
+    
+class JokeView(GenericViewSet):
+    def joke(self, request):
+        
+
+        url = "https://v2.jokeapi.dev/joke/Any?format=json&?type=single"
+
+        payload = {}
+        files={}
+        headers = {}
+
+        response = requests.request("GET", url, headers=headers, data=payload, files=files)
+
+        return Response(data=response.json(), status=status.HTTP_200_OK)
+
 
 # class ProductList(APIView):
 
