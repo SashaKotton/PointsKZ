@@ -30,7 +30,7 @@ class ProductList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin
     permission_classes_by_action = {
         'list':[permissions.AllowAny],
         'create':[permissions.IsAuthenticated & IsSuperAdmin],
-        'retrive':[permissions.AllowAny],
+        'retrieve':[permissions.AllowAny],
         'update':[permissions.IsAuthenticated & IsSuperAdmin],
         'destroy':[permissions.IsAuthenticated & IsSuperAdmin],
     }
@@ -51,12 +51,35 @@ class ProductList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin
             return ProductSerializer
         if self.action == 'create':
             return ProductCreateSerializer
-        if self.action == 'retrive':
+        if self.action == 'retrieve':
             return ProductSerializer
         if self.action == 'update':
-            return ProductSerializer
+            return ProductCreateSerializer
         if self.action == 'destroy':
             return ProductCreateSerializer
+        
+        
+class CategoryList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes_by_action = {
+        'list':[permissions.AllowAny],
+        'create':[permissions.IsAuthenticated & IsSuperAdmin],
+        'retrieve':[permissions.AllowAny],
+        'update':[permissions.IsAuthenticated & IsSuperAdmin],
+        'destroy':[permissions.IsAuthenticated & IsSuperAdmin],
+    }
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['title',]
+    search_fields = ['title', ]
+    ordering_fields = ['title',]
+    ordering = ['title',]
+
+    def get_permissions(self):
+        try:
+            return [permission() for permission in self.permission_classes_by_action[self.action]]
+        except KeyError:
+            return []
 
 
 class DelivererList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
@@ -65,7 +88,7 @@ class DelivererList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMix
     permission_classes_by_action = {
         'list':[permissions.AllowAny],
         'create':[permissions.IsAuthenticated & IsSuperAdmin],
-        'retrive':[permissions.AllowAny],
+        'retrieve':[permissions.AllowAny],
         'update':[permissions.IsAuthenticated & IsSuperAdmin],
         'destroy':[permissions.IsAuthenticated & IsSuperAdmin],
     }
@@ -88,7 +111,7 @@ class OrderList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, 
     permission_classes_by_action = {
         'list':[permissions.AllowAny],
         'create':[permissions.IsAuthenticated & IsSuperAdmin],
-        'retrive':[permissions.AllowAny],
+        'retrieve':[permissions.AllowAny],
         'update':[permissions.IsAuthenticated & IsSuperAdmin],
         'destroy':[permissions.IsAuthenticated & IsSuperAdmin],
     }
@@ -122,7 +145,7 @@ class UsersList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, 
     permission_classes_by_action = {
         'list':[permissions.AllowAny],
         'create':[permissions.IsAuthenticated & IsSuperAdmin],
-        'retrive':[permissions.AllowAny],
+        'retrieve':[permissions.AllowAny],
         'update':[permissions.IsAuthenticated & IsSuperAdmin],
         'destroy':[permissions.IsAuthenticated & IsSuperAdmin],
     }
@@ -138,27 +161,7 @@ class UsersList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, 
         except KeyError:
             return []
         
-class CategoryList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    permission_classes_by_action = {
-        'list':[permissions.AllowAny],
-        'create':[permissions.IsAuthenticated & IsSuperAdmin],
-        'retrive':[permissions.AllowAny],
-        'update':[permissions.IsAuthenticated & IsSuperAdmin],
-        'destroy':[permissions.IsAuthenticated & IsSuperAdmin],
-    }
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['title',]
-    search_fields = ['title', ]
-    ordering_fields = ['title',]
-    ordering = ['title',]
 
-    def get_permissions(self):
-        try:
-            return [permission() for permission in self.permission_classes_by_action[self.action]]
-        except KeyError:
-            return []
         
 class PaymentList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Payment.objects.all()
@@ -166,7 +169,7 @@ class PaymentList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin
     permission_classes_by_action = {
         'list':[permissions.AllowAny],
         'create':[permissions.IsAuthenticated & IsSuperAdmin],
-        'retrive':[permissions.AllowAny],
+        'retrieve':[permissions.AllowAny],
         'update':[permissions.IsAuthenticated & IsSuperAdmin],
         'destroy':[permissions.IsAuthenticated & IsSuperAdmin],
     }
@@ -188,7 +191,7 @@ class OrderItemList(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMix
     permission_classes_by_action = {
         'list':[permissions.AllowAny],
         'create':[permissions.IsAuthenticated & IsSuperAdmin],
-        'retrive':[permissions.AllowAny],
+        'retrieve':[permissions.AllowAny],
         'update':[permissions.IsAuthenticated & IsSuperAdmin],
         'destroy':[permissions.IsAuthenticated & IsSuperAdmin],
     }
@@ -210,7 +213,7 @@ class DeliveryCompanyList(GenericViewSet, mixins.ListModelMixin, mixins.CreateMo
     permission_classes_by_action = {
         'list':[permissions.AllowAny],
         'create':[permissions.IsAuthenticated & IsSuperAdmin],
-        'retrive':[permissions.AllowAny],
+        'retrieve':[permissions.AllowAny],
         'update':[permissions.IsAuthenticated & IsSuperAdmin],
         'destroy':[permissions.IsAuthenticated & IsSuperAdmin],
     }

@@ -33,7 +33,7 @@ class TokenRefreshView(TokenRefreshView):
 
 class UserRegisterView(APIView):
     
-    def post(serl, request):
+    def post(self, request):
         username = request.data['username']
         password = request.data['password']
         first_name = request.data['first_name']
